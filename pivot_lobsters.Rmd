@@ -1,0 +1,70 @@
+---
+title: "pivot_lobsters.Rmd"
+author: "فؤاد مبارك"
+date: "2023-01-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+## attach libraries
+library(tidyverse)
+library(readxl)
+library(here)
+library(skimr) # install.packages('skimr')
+library(kableExtra) # install.packages('kableExtra')
+
+## read in data
+lobsters <- read_xlsx(here("data/lobsters.xlsx"), skip=4)
+
+# explore data
+skimr::skim(lobsters) 
+```
+
+# create pivot using dplyr functions
+
+```{r}
+# grouping by one variable
+
+lobsters %>% 
+  group_by(year) %>% 
+  summarise(count_by_year = n())
+
+# grouping by multiple variables
+
+lobsters %>% 
+  group_by(site, year) %>% 
+  summarise(count_by_year = n())
+
+# summarise multiple variables
+
+siteyear_summary <- lobsters %>% 
+  group_by(site, year) %>% 
+  summarise(count_by_year = n(),
+            mean_size_mm = mean(size_mm, na.rm = T),
+            sd_size_mm = sd(size_mm, na.rm =T))
+```
+# Table formating with kable function
+
+```{r}
+
+## make a table with our new variable
+
+siteyear_summary %>% 
+  kable()
+```
+
+
+There are `r nrow(lobsters)` total lobsters included in this report.
+
+# activity
+
+```{r}
+siteyear_summary <- lobsters %>% 
+  group_by(site, year) %>% 
+  summarise(count_by_year = n(),
+            mean_size_mm = mean(size_mm, na.rm = T),
+            sd_size_mm = sd(size_mm, na.rm =T),
+            median_size_mm = median(size_mm, na.rm = T))
+```
+

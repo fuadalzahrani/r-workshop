@@ -76,5 +76,57 @@ gg_base +
     aes(fill = visitors),
     alpha = 0.5
   )
+
+# themes
+gg_base +
+  geom_point(
+    aes(size = visitors,
+        colour = visitors),
+    alpha = 0.5
+  ) +
+  theme_light()
+
+# updating axis labels and titles
+
+gg_base +
+  geom_line(linetype = "dotted")+
+  theme_bw() +
+  labs(
+    x = "Year",
+    y = "Annula park visitors",
+    title ="Channel Islands NP Visitation",
+    subtitle = "(1963 - 2016"
+  )
+
+# combining compatible geoms (e.g. adding points to line graph)
+gg_base +
+  geom_line(colour = "purple")+
+  geom_point(colour = "orange",
+             aes(size = visitors),
+             alpha = 0.5) 
+
+# multi-series ggplot graphs
+
+ggplot(data = ca_np, aes( x = year, y = visitors, group = park_name)) +
+  geom_line()
+# or 
+ggplot(data = ca_np, aes( x = year, y = visitors))+
+  geom_line(aes(color = park_name))
+
+# store this line so we can use it more quickly later on in the lesson
+gg_np <- ggplot(data = ca_np, aes( x = year, y = visitors, group = park_name))
+
+# faceting ggplot graphs
+
+gg_np +
+  geom_line(show.legend = F) +
+  theme_light() +
+  labs(x = "Year", y = "annual visitors")+
+  facet_wrap(~ park_name)
+
+# exporting a ggplot graph with ggsave()
+
+ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 8, height = 7)
 ```
 
+# Pivotables with dplyr
