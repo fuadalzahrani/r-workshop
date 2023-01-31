@@ -15,7 +15,7 @@ library(skimr) # install.packages('skimr')
 library(kableExtra) # install.packages('kableExtra')
 
 ## read in data
-lobsters <- read_xlsx(here("data/lobsters.xlsx"), skip=4)
+lobsters <- read_xlsx(here("data/lobsters2.xlsx"), skip=4)
 
 # explore data
 skimr::skim(lobsters) 
@@ -66,5 +66,23 @@ siteyear_summary <- lobsters %>%
             mean_size_mm = mean(size_mm, na.rm = T),
             sd_size_mm = sd(size_mm, na.rm =T),
             median_size_mm = median(size_mm, na.rm = T))
+
+# a ggplot option
+
+ggplot(data = siteyear_summary, aes(x = year, y = median_size_mm, colour =site))+
+  geom_line()
+
+# save 
+
+ggsave(here("figures", "lobsters_line.png"))
+
+# another plot
+
+ggplot(siteyear_summary, aes(x = year, y = median_size_mm)) +
+  geom_col() +
+  facet_wrap(~site)
+
+# save plot
+ggsave(here("figures", "lobsters_col.png"))
 ```
 
