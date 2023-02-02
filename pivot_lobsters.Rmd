@@ -15,7 +15,7 @@ library(skimr) # install.packages('skimr')
 library(kableExtra) # install.packages('kableExtra')
 
 ## read in data
-lobsters <- read_xlsx(here("data/lobsters2.xlsx"), skip=4)
+lobsters <- read_xlsx(here("data/lobsters.xlsx"), skip=4)
 
 # explore data
 skimr::skim(lobsters) 
@@ -84,5 +84,29 @@ ggplot(siteyear_summary, aes(x = year, y = median_size_mm)) +
 
 # save plot
 ggsave(here("figures", "lobsters_col.png"))
+```
+
+
+```{r}
+# add new column 
+
+lobsters %>% 
+  mutate(size_m = size_mm/1000)
+
+# add a column that has the same value repeated 
+
+lobsters_detailed <- lobsters %>% 
+  mutate(size_m = size_mm/1000,
+         millenia = 2000,
+         observer = "فؤاد مبارك الزهراني")
+```
+
+
+```{r}
+# select columns
+
+lobsters_detailed %>% 
+  select(date, site, size_m)
+
 ```
 
