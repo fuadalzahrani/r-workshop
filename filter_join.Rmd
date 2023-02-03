@@ -1,0 +1,25 @@
+---
+title: "filter_join.Rmd"
+author: "فؤاد مبارك"
+date: "2023-02-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(here) 
+library(kableExtra)
+library(usethis)
+
+```
+
+```{r}
+
+# Read in data
+
+fish <- read_csv(here("data", "fish.csv"))
+kelp_abur <- read_excel(here("data", "kelp.xlsx"), sheet = "abur")
+```
+

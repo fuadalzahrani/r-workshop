@@ -1,0 +1,94 @@
+---
+title: "My_tidying.Rmd"
+author: "فؤاد مبارك"
+date: "2023-02-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# attach packages
+
+library(tidyverse)
+library(janitor)
+library(here)
+library(readxl)
+
+# read in data
+
+inverts <- read_excel(here("data", "inverts.xlsx"))
+```
+
+```{r}
+# convert inverts to long format
+
+inverts_long <- pivot_longer(data = inverts, 
+                             cols = "2016":"2018",
+                             names_to = "year",
+                             values_to = "sp_count")
+class(inverts_long$year)
+
+# coerce "year" class to numeric
+
+inverts_long <- inverts_long %>% 
+  mutate(year = as.numeric(year))
+
+class(inverts_long$year)
+```
+
+```{r}
+# convert from long to wider format
+
+inverts_wide <- inverts_long %>%
+  pivot_wider(names_from = common_name,
+              values_from = sp_count)
+
+
+# clean up column names
+
+inverts_wide <-  inverts_wide %>% 
+  clean_names()
+
+```
+
+# merge information from separate columns
+
+```{r}
+
+inverts_unite <-  inverts_long %>% 
+  unite(col = "site_year", # what to name the new united column
+        c(site, year), # The columns we'll unite
+        sep = "_")
+
+
+```
+
+# activity
+
+```{r}
+
+invers_moyr <- inverts_long %>% 
+  unite(col = "mo_yr",
+        c(month, year),
+        sep = "/")
+```
+
+# separate information into multiple columns
+```{r}
+
+inverts_sep <- inverts_unite %>% 
+  separate(site_year, 
+           into = c("my_site", "my_year"))
+```
+
+# to replace a pattern
+
+```{r}
+
+ca_abbr <- inverts %>% 
+  mutate(common_name = str_replace(common_name,
+                                   pattern = "california",
+                                   replacement = "CA"))
+```
+
